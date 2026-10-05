@@ -19,5 +19,83 @@
         "artist": "Autor de Prueba",
         "cover": "./src/assets/img/note.jpg",
         "src": "src/music/cancion-3.mp3"
+    },
+    {
+        "id": 4,
+        "title": "Turn it Louder",
+        "artist": "Aylex",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song4.jpg",
+        "src": "src/music/song4.mp3"
+    },
+    {
+        "id": 5,
+        "title": "All Night",
+        "artist": "Burgundy",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song5.jpg",
+        "src": "src/music/song5.mp3"
+    },
+    {
+        "id": 6,
+        "title": "Faster",
+        "artist": "Zambolino",
+        "cover": "./src/assets/img/song6.jpg",
+        "src": "src/music/song6.mp3"
+    },
+    {
+        "id": 7,
+        "title": "Combat",
+        "artist": "Damtaro",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song7.jpg",
+        "src": "src/music/song7.mp3"
+    },
+    {
+        "id": 8,
+        "title": "Atmospheric Guitar",
+        "artist": "Pufino",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song8.jpg",
+        "src": "src/music/song8.mp3"
+    },
+    {
+        "id": 9,
+        "title": "The Feeling",
+        "artist": "AgusAlvarez & Luke Bergs",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song9.jpg",
+        "src": "src/music/song9.mp3"
+    },
+    {
+        "id": 10,
+        "title": "Out & About",
+        "artist": "Moavii",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song10.jpg",
+        "src": "src/music/song10.mp3"
+    },
+    {
+        "id": 11,
+        "title": "Clarity",
+        "artist": "Damtaro",
+        "cover": "./src/assets/img/song11.jpg",
+        "src": "src/music/song11.mp3"
+    },
+    {
+        "id": 12,
+        "title": "Listen To My Heartbeat",
+        "artist": "Dagored",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song12.jpg",
+        "src": "src/music/song12.mp3"
+    },
+    {
+        "id": 13,
+        "title": "Digital Soul",
+        "artist": "HiLau",
+        "genre": "Electronic",
+        "cover": "./src/assets/img/song13.jpg",
+        "src": "src/music/song13.mp3"
     }
 ]

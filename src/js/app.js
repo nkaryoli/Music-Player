@@ -20,13 +20,36 @@ const muteBtn = document.querySelector('#mute-btn');
 const volumeSlider = document.querySelector('#volume');
 const volumeValueEl = document.querySelector('#volume-value');
 
-const sound = new Howl({
-    src: ['src/music/marvrix-yellow-sorrows-255741.mp3'],
-    html5: true,
-    volume: 0.5,
-});
+let songs;
+let currentSong = 0;
+let sound = null;
+
+const fetchMusic = async () => {
+    try {
+        const res = await fetch('/src/data/music.json');
+        songs = await res.json();
+        console.log('Canciones cargadas:', songs);
+    } catch (error) {
+        console.error('Error al cargar el JSON:', error);
+    }
+};
+
+// https://freetouse.com/music/category/summer
 
 playBtn.addEventListener('click', () => {
+    if (!songs || songs.length === 0) return;
+
+    if (!sound) {
+        sound = new Howl({
+            src: [songs[currentSong].src],
+            html5: true,
+            volume: 0.5,
+            onend: () => {
+                playBtn.innerHTML = '<i class="fa-sharp fa-solid fa-circle-play"></i>';
+            }
+        });
+    }
+
     if (sound.playing()) {
         sound.pause();
         playBtn.innerHTML = '<i class="fa-sharp fa-solid fa-circle-play"></i>';
@@ -35,3 +58,20 @@ playBtn.addEventListener('click', () => {
         playBtn.innerHTML = '<i class="fa-sharp fa-solid fa-circle-pause"></i>';
     }
 });
+
+
+nextBtn.addEventListener('click', () => {
+    if (currentSong == songs.length) return;
+
+    currentSong += 1;
+
+})
+
+previousBtn.addEventListener('click', () => {
+    if (currentSong == 0) return;
+
+    currentSong -= 1;
+    
+})
+
+fetchMusic();
