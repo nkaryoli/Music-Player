@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "title": "Yellow Sorrows",
+        "artist": "Marvrix",
+        "cover": "./src/assets/img/note.jpg",
+        "src": "src/music/marvrix-yellow-sorrows-255741.mp3"
+    },
+    {
+        "id": 2,
+        "title": "Ejemplo Canción 2",
+        "artist": "Artista Desconocido",
+        "cover": "./src/assets/img/note.jpg",
+        "src": "src/music/otra-cancion.mp3"
+    },
+    {
+        "id": 3,
+        "title": "Ejemplo Canción 3",
+        "artist": "Autor de Prueba",
+        "cover": "./src/assets/img/note.jpg",
+        "src": "src/music/cancion-3.mp3"
+    }
+]
