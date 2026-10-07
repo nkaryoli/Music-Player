@@ -23,6 +23,8 @@ const volumeValueEl = document.querySelector("#volume-value");
 let songs;
 let currentSong = 0;
 let sound = null;
+let isOnRepeat = false;
+let isOnShuffle = false;
 
 const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -40,7 +42,7 @@ const updateSongInfo = () => {
     sound = new Howl({
         src: [song.src],
         html5: true,
-        volume: 0.5,
+        volume: volumeSlider.value,
         onload: () => {
             const duration = sound.duration();
 
@@ -51,12 +53,28 @@ const updateSongInfo = () => {
             updateProgress();
         },
         onend: () => {
-            progressBar.value = 0;
-            currentTimeEl.textContent = "0:00";
-            playBtn.innerHTML = '<i class="fa-sharp fa-solid fa-circle-play"></i>';
+            onFinishSong();
         },
     });
 };
+
+const onFinishSong = () => {
+
+    if (isOnRepeat) {
+        sound.play();
+    } else if (isOnShuffle) {
+        currentSong = Math.floor(Math.random() * (songs.length - 1));
+    } else if (currentSong === songs.length - 1) {
+        currentSong = 0;
+    } else {
+        currentSong += 1;
+    }
+
+    currentTimeEl.textContent = "0:00";
+    progressBar.value = 0;
+
+     changeSong(currentSong);
+}
 
 const updateProgress = () => {
     if (!sound || !sound.playing()) return;
@@ -94,6 +112,8 @@ const changeSong = (newIndex) => {
 
     if (newIndex < 0 || newIndex >= songs.length) return;
 
+    const wasPlaying = sound && sound.playing();
+
     if (sound) {
         sound.stop();
         sound.unload();
@@ -104,7 +124,8 @@ const changeSong = (newIndex) => {
     currentTimeEl.textContent = "0:00";
 
     updateSongInfo();
-    playSong();
+    
+    if (wasPlaying) playSong();
 };
 
 const fetchMusic = async () => {
@@ -117,6 +138,19 @@ const fetchMusic = async () => {
         console.error("Error al cargar el JSON:", error);
     }
 };
+
+const toggle = (button, value) => {
+    if (value) {
+        value = false;
+        button.classList.remove('text-gray-100');
+        button.classList.add('text-gray-400');
+    } else {
+        value = true
+        button.classList.remove('text-gray-400');
+        button.classList.add('text-gray-100')
+    }
+    return value;
+}
 
 playBtn.addEventListener("click", () => playPauseSong());
 
@@ -141,5 +175,19 @@ progressBar.addEventListener("input", () => {
     sound.seek(newTime);
     currentTimeEl.textContent = formatTime(newTime);
 });
+
+volumeSlider.addEventListener("input", () => {
+    if (!sound) return;
+
+    const newVolume = Number(volumeSlider.value);
+
+    console.log(newVolume);
+    volumeValueEl.textContent = newVolume * 10;
+    Howler.volume(newVolume);
+});
+
+repeatBtn.addEventListener("click", () => isOnRepeat = toggle(repeatBtn, isOnRepeat));
+
+shuffleBtn.addEventListener("click", () => isOnShuffle = toggle(shuffleBtn, isOnShuffle));
 
 fetchMusic();
