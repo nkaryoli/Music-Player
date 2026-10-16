@@ -4,21 +4,21 @@
         "title": "Yellow Sorrows",
         "artist": "Marvrix",
         "cover": "./src/assets/img/note.jpg",
-        "src": "src/music/marvrix-yellow-sorrows-255741.mp3"
+        "src": "src/music/song1.mp3"
     },
     {
         "id": 2,
-        "title": "Ejemplo Canción 2",
-        "artist": "Artista Desconocido",
+        "title": "Paradise",
+        "artist": "Alana Jordan",
         "cover": "./src/assets/img/note.jpg",
-        "src": "src/music/otra-cancion.mp3"
+        "src": "src/music/song2.mp3"
     },
     {
         "id": 3,
-        "title": "Ejemplo Canción 3",
-        "artist": "Autor de Prueba",
+        "title": "Yellow Mood",
+        "artist": "LP Studio Music",
         "cover": "./src/assets/img/note.jpg",
-        "src": "src/music/cancion-3.mp3"
+        "src": "src/music/song3.mp3"
     },
     {
         "id": 4,
