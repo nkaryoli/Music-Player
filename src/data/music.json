@@ -3,6 +3,7 @@
         "id": 1,
         "title": "Yellow Sorrows",
         "artist": "Marvrix",
+        "genre": "Acoustic",
         "cover": "./src/assets/img/note.jpg",
         "src": "src/music/song1.mp3"
     },
@@ -10,6 +11,7 @@
         "id": 2,
         "title": "Paradise",
         "artist": "Alana Jordan",
+        "genre": "Pop",
         "cover": "./src/assets/img/note.jpg",
         "src": "src/music/song2.mp3"
     },
@@ -17,6 +19,7 @@
         "id": 3,
         "title": "Yellow Mood",
         "artist": "LP Studio Music",
+        "genre": "Chill",
         "cover": "./src/assets/img/note.jpg",
         "src": "src/music/song3.mp3"
     },
@@ -40,6 +43,7 @@
         "id": 6,
         "title": "Faster",
         "artist": "Zambolino",
+        "genre": "Dance",
         "cover": "./src/assets/img/song6.jpg",
         "src": "src/music/song6.mp3"
     },
@@ -79,6 +83,7 @@
         "id": 11,
         "title": "Clarity",
         "artist": "Damtaro",
+        "genre": "Electronic",
         "cover": "./src/assets/img/song11.jpg",
         "src": "src/music/song11.mp3"
     },
