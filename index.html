@@ -7,66 +7,7 @@
     <title>Reproductor Musical</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        .slider-vertical {
-            writing-mode: vertical-lr;
-            direction: rtl;
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-            cursor: pointer;
-            width: 20px;
-            height: 100%;
-            min-height: 100px;
-            max-height: 150px;
-            padding: 0;
-            margin: 0;
-            outline: none;
-        }
-
-        .slider-vertical::-webkit-slider-runnable-track {
-            width: 12px;
-            height: 100%;
-            background: #1e2738;
-            border-radius: 9999px;
-            margin: 0 auto;
-        }
-
-        .slider-vertical::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #ffffff;
-            box-shadow: 0 0 8px rgba(168, 85, 247, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
-            margin-left: -3px;
-            cursor: pointer;
-            transition: transform 0.12s ease, box-shadow 0.12s ease;
-        }
-
-        .slider-vertical:hover::-webkit-slider-thumb {
-            box-shadow: 0 0 12px rgba(168, 85, 247, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6);
-            transform: scale(1.1);
-        }
-
-        .slider-vertical::-moz-range-track {
-            width: 12px;
-            height: 100%;
-            background: #1e2738;
-            border-radius: 9999px;
-        }
-
-        .slider-vertical::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border: none;
-            border-radius: 50%;
-            background: #ffffff;
-            box-shadow: 0 0 8px rgba(168, 85, 247, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="./src/styles/style.css">
 </head>
 
 <body class="bg-black text-white h-screen flex flex-col overflow-hidden">
@@ -76,32 +17,41 @@
             <h1 class="text-xl font-bold tracking-tight text-white">Reproducción Musical</h1>
         </div>
 
-        <div class="flex items-center gap-3">
-            <button id="home-btn" class="bg-neutral-900 rounded-full w-10 h-10 text-zinc-400 hover:text-white transition cursor-pointer" title="Inicio"><i class="fa-solid fa-house"></i></button>
+        <div class="flex items-center gap-3 absolute top-2 left-1/2 translate-x-[-50%]">
+            <button id="home-btn"
+                class="bg-neutral-900 rounded-full w-10 h-10 text-zinc-400 hover:text-white transition cursor-pointer"
+                title="Inicio"><i class="fa-solid fa-house"></i></button>
             <div class="relative flex items-center">
-                <input id="search-input" type="text" placeholder="¿Qué quieres escuchar?" class="bg-neutral-900 rounded-full py-2 pl-9 pr-4 min-w-96 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-blue-500 transition">
+                <input id="search-input" type="text" placeholder="¿Qué quieres escuchar?"
+                    class="bg-neutral-900 rounded-full py-2 pl-9 pr-4 min-w-96 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-pink-600 transition">
                 <i class="fa-solid fa-magnifying-glass text-zinc-500 absolute left-3 pointer-events-none"></i>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <button class="rounded-full p-2 px-5 cursor-pointer text-sm font-semibold hover:opacity-90 transition" style="background: linear-gradient(to bottom right, #ff1239, #5E3DFF);">Iniciar Sesión</button>
+            <button class="rounded-full p-2 px-5 cursor-pointer text-sm font-semibold hover:opacity-90 transition bg-linear-to-br from-pink-600 to-indigo-800">
+                Iniciar Sesión
+            </button>
         </div>
     </header>
 
     <section class="flex-1 min-h-0 w-full mx-auto grid grid-cols-4 grid-rows-[auto_1fr] gap-4 px-4">
-        <div class="bg-neutral-900/50 col-span-1 p-5 rounded-lg shadow-md flex flex-col min-h-0">
-            <h2 class="text-lg font-bold mb-3 text-white flex items-center justify-between">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-heart text-red-500"></i> Favoritas</span>
+        <div class="bg-neutral-900/50 col-span-1 pl-4 pt-4 rounded-lg shadow-md flex flex-col min-h-0">
+            <h2 class="text-lg font-bold mb-4 pr-4 text-white flex items-center justify-between">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-heart text-red-500"></i>
+                    Favoritas
+                </span>
                 <span id="favorites-count" class="text-xs text-zinc-400 font-mono">0</span>
             </h2>
             <ul id="favorites-list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2">
             </ul>
         </div>
 
-        <div class="bg-neutral-900/50 col-span-2 p-5 rounded-lg shadow-md flex flex-col min-h-0">
-            <h2 class="text-lg font-bold mb-3 text-white flex items-center justify-between">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-music text-blue-400"></i> Lista de Reproducción</span>
+        <div class="bg-neutral-900/50 pl-4 pt-4 col-span-2 rounded-lg shadow-md flex flex-col min-h-0">
+            <h2 class="text-lg font-bold mb-4 pr-4 text-white flex items-center justify-between">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-music text-pink-600"></i>
+                    Lista de Reproducción
+                </span>
                 <span id="playlist-count" class="text-xs text-zinc-400 font-mono">0 canciones</span>
             </h2>
             <ul id="list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2">
@@ -117,14 +67,18 @@
                     <img id="current-song-img" src="./src/assets/img/note.jpg" alt="Portada"
                         class="w-16 h-16 rounded-lg object-cover shadow flex-shrink-0">
                     <div class="flex flex-col min-w-0">
-                        <span class="text-[11px] font-bold tracking-wider text-purple-400 uppercase">SONANDO AHORA</span>
-                        <h3 id="current-song-title" class="text-base font-bold text-white truncate leading-snug">Song Title</h3>
+                        <span class="text-[11px] font-bold tracking-wider text-purple-400 uppercase">SONANDO
+                            AHORA</span>
+                        <h3 id="current-song-title" class="text-base font-bold text-white truncate leading-snug">Song
+                            Title</h3>
                         <p id="current-song-artist" class="text-xs text-zinc-400 truncate">Artist Name</p>
                         <span id="current-song-genre"
                             class="self-start text-[11px] bg-zinc-700/80 text-zinc-300 px-2.5 py-0.5 rounded-full mt-1.5 font-medium">Género</span>
                     </div>
                 </div>
-                <button id="favorite-current-btn" class="text-zinc-500 hover:text-red-500 p-2 text-xl transition cursor-pointer shrink-0" title="Añadir a favoritas">
+                <button id="favorite-current-btn"
+                    class="text-zinc-500 hover:text-red-500 p-2 text-xl transition cursor-pointer shrink-0"
+                    title="Añadir a favoritas">
                     <i class="fa-regular fa-heart"></i>
                 </button>
             </div>
@@ -181,14 +135,16 @@
                 </div>
 
                 <!-- Restablecer -->
-                <button id="reset-eq" class="shrink-0 w-full py-2 px-3 rounded-lg border border-zinc-700/80 hover:border-zinc-500 bg-neutral-900/60 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-medium transition cursor-pointer text-center">
+                <button id="reset-eq"
+                    class="shrink-0 w-full py-2 px-3 rounded-lg border border-zinc-700/80 hover:border-zinc-500 bg-neutral-900/60 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-medium transition cursor-pointer text-center">
                     Restablecer ecualizador
                 </button>
             </div>
         </div>
     </section>
 
-    <div class="w-full grid grid-cols-3 items-center bg-neutral-900/50 border-t border-zinc-800 p-3 flex-shrink-0 shadow-2xl">
+    <div
+        class="w-full grid grid-cols-3 items-center bg-neutral-900/50 border-t border-zinc-800 p-3 flex-shrink-0 shadow-2xl">
 
         <div class="flex items-center gap-3 min-w-0">
             <img id="song-img" src="./src/assets/img/note.jpg" alt="Music Note"
@@ -201,24 +157,24 @@
 
         <div class="space-y-2">
             <div id="controls" class="flex items-center justify-center gap-5">
-                <button id="shuffle" class="text-sm text-zinc-400 hover:text-white transition cursor-pointer"
+                <button id="shuffle" class="text-sm text-zinc-400 hover:text-pink-500 transition cursor-pointer"
                     title="Aleatorio">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
-                <button id="previous" class="text-lg text-zinc-300 hover:text-white transition cursor-pointer"
+                <button id="previous" class="text-lg text-zinc-300 hover:text-pink-500 transition cursor-pointer"
                     title="Anterior">
                     <i class="fa-solid fa-backward-step"></i>
                 </button>
                 <button id="play"
-                    class="text-3xl text-blue-500 hover:text-blue-400 hover:scale-105 active:scale-95 transition cursor-pointer"
+                    class="text-3xl text-pink-600 hover:text-pink-500 hover:scale-105 active:scale-95 transition cursor-pointer"
                     title="Reproducir/Pausar">
                     <i class="fa-sharp fa-solid fa-circle-play"></i>
                 </button>
-                <button id="next" class="text-lg text-zinc-300 hover:text-white transition cursor-pointer"
+                <button id="next" class="text-lg text-zinc-300 hover:text-pink-500 transition cursor-pointer"
                     title="Siguiente">
                     <i class="fa-sharp fa-solid fa-forward-step"></i>
                 </button>
-                <button id="repeat" class="text-sm text-zinc-400 hover:text-white transition cursor-pointer"
+                <button id="repeat" class="text-sm text-zinc-400 hover:text-pink-500 transition cursor-pointer"
                     title="Repetir">
                     <i class="fa-solid fa-repeat"></i>
                 </button>
@@ -227,20 +183,21 @@
             <div class="w-full flex items-center justify-center gap-3">
                 <small id="current-time" class="text-xs font-mono text-zinc-400 w-10 text-right">0:00</small>
                 <input id="progress-bar" type="range" min="0" max="0" value="0"
-                    class="w-full accent-blue-500 cursor-pointer h-1.5 bg-zinc-700 rounded-lg" />
+                    class="w-full accent-pink-600 cursor-pointer h-1.5 bg-zinc-700 rounded-lg" />
                 <small id="total-time" class="text-xs font-mono text-zinc-400 w-10">0:00</small>
             </div>
         </div>
 
         <!-- Controles de volumen -->
         <div id="volume-controls" class="flex items-center justify-end gap-3">
-            <button id="mute-btn" class="text-zinc-400 hover:text-white transition cursor-pointer" title="Silenciar">
+            <button id="mute-btn" class="text-zinc-400 hover:text-pink-500 transition cursor-pointer" title="Silenciar">
                 <i class="fa-solid fa-volume-high"></i>
             </button>
             <input type="range" id="volume" min="0" max="1" value="0.2" step="0.1"
-                class="w-24 accent-blue-500 cursor-pointer h-1.5 bg-zinc-700 rounded-lg">
+                class="w-24 accent-pink-600 cursor-pointer h-1.5 bg-zinc-700 rounded-lg">
             <small id="volume-value" class="text-xs font-mono text-zinc-400 w-4">2</small>
-            <button id="fullscreen-btn" class="text-zinc-400 hover:text-white transition cursor-pointer ml-2" title="Pantalla completa">
+            <button id="fullscreen-btn" class="text-zinc-400 hover:text-pink-500 transition cursor-pointer ml-2"
+                title="Pantalla completa">
                 <i class="fa-solid fa-expand"></i>
             </button>
         </div>

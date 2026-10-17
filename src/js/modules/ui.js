@@ -105,31 +105,45 @@ export const updateFavoriteCurrentBtn = (isFav) => {
  * @param {number} activeIndex Índice general de la canción sonando.
  */
 export const updateActiveSongHighlight = (activeIndex) => {
-    if (elements.musicList) {
-        const items = elements.musicList.querySelectorAll("li[data-song-index]");
+    const updateList = (listEl) => {
+        if (!listEl) return;
+        const items = listEl.querySelectorAll("li[data-song-index]");
         items.forEach((item) => {
             const index = Number(item.dataset.songIndex);
-            if (index === activeIndex) {
-                item.classList.add("bg-zinc-800", "border-l-4", "border-blue-500");
-                item.classList.remove("hover:bg-zinc-800/60");
-            } else {
-                item.classList.remove("bg-zinc-800", "border-l-4", "border-blue-500");
-                item.classList.add("hover:bg-zinc-800/60");
-            }
-        });
-    }
+            const titleEl = item.querySelector(".song-title") || item.querySelector("span");
+            const trackNumEl = item.querySelector(".track-number");
+            const isActive = index === activeIndex;
 
-    if (elements.favoritesList) {
-        const favItems = elements.favoritesList.querySelectorAll("li[data-song-index]");
-        favItems.forEach((item) => {
-            const index = Number(item.dataset.songIndex);
-            if (index === activeIndex) {
-                item.classList.add("bg-zinc-800", "border-l-4", "border-red-500");
+            if (titleEl) {
+                if (isActive) {
+                    titleEl.classList.remove("text-white");
+                    titleEl.classList.add("text-pink-500");
+                } else {
+                    titleEl.classList.remove("text-pink-500");
+                    titleEl.classList.add("text-white");
+                }
+            }
+
+            if (trackNumEl) {
+                if (isActive) {
+                    trackNumEl.classList.remove("text-zinc-500");
+                    trackNumEl.classList.add("text-pink-500", "font-bold");
+                } else {
+                    trackNumEl.classList.remove("text-pink-500", "font-bold");
+                    trackNumEl.classList.add("text-zinc-500");
+                }
+            }
+
+            if (isActive) {
+                item.classList.add("bg-neutral-900", "border-l-4", "border-pink-600");
             } else {
-                item.classList.remove("bg-zinc-800", "border-l-4", "border-red-500");
+                item.classList.remove("bg-neutral-900", "border-l-4", "border-pink-600");
             }
         });
-    }
+    };
+
+    updateList(elements.musicList);
+    updateList(elements.favoritesList);
 };
 
 /**
@@ -156,26 +170,30 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
         return;
     }
 
-    songs.forEach((song) => {
+    songs.forEach((song, idx) => {
         const originalIndex = song.originalIndex !== undefined ? song.originalIndex : songs.indexOf(song);
         const li = document.createElement("li");
         li.dataset.songIndex = originalIndex;
-        li.className = "flex items-center justify-between gap-3 p-2 rounded-lg cursor-pointer transition duration-150 group";
+        li.className = "flex items-center justify-between gap-3 p-1.5 rounded-lg cursor-pointer transition duration-150 group hover:bg-neutral-900";
 
         const leftWrapper = document.createElement("div");
-        leftWrapper.className = "flex items-center gap-3 min-w-0 flex-1";
+        leftWrapper.className = "flex items-center gap-2 min-w-0 flex-1";
+
+        const trackNumber = document.createElement("span");
+        trackNumber.className = "track-number w-5 text-xs font-mono text-zinc-500 text-center flex-shrink-0";
+        trackNumber.textContent = idx + 1;
 
         const img = document.createElement("img");
         img.src = song.cover || "./src/assets/img/note.jpg";
         img.alt = song.title;
-        img.className = "w-11 h-11 object-cover rounded-md flex-shrink-0";
+        img.className = "w-9 h-9 object-cover rounded-md flex-shrink-0";
         img.onerror = () => { img.src = "./src/assets/img/note.jpg"; };
 
         const info = document.createElement("div");
         info.className = "flex flex-col min-w-0";
 
         const title = document.createElement("span");
-        title.className = "text-sm font-semibold text-white truncate";
+        title.className = "song-title text-sm font-semibold text-white truncate transition-colors group-hover:underline";
         title.textContent = song.title;
 
         const metaWrapper = document.createElement("div");
@@ -196,6 +214,7 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
         info.appendChild(title);
         info.appendChild(metaWrapper);
 
+        leftWrapper.appendChild(trackNumber);
         leftWrapper.appendChild(img);
         leftWrapper.appendChild(info);
 
@@ -257,10 +276,10 @@ export const renderFavorites = (favoriteSongs, activeIndex, onSelectSong, onRemo
         const originalIndex = song.originalIndex !== undefined ? song.originalIndex : song.id - 1;
         const li = document.createElement("li");
         li.dataset.songIndex = originalIndex;
-        li.className = "flex items-center justify-between gap-2 p-2 rounded-lg cursor-pointer hover:bg-zinc-800/60 transition group";
+        li.className = "flex items-center justify-between gap-2 p-1 rounded-lg cursor-pointer hover:bg-zinc-800/60 transition group";
 
         const leftWrapper = document.createElement("div");
-        leftWrapper.className = "flex items-center gap-2.5 min-w-0 flex-1";
+        leftWrapper.className = "flex items-center gap-2 min-w-0 flex-1";
 
         const img = document.createElement("img");
         img.src = song.cover || "./src/assets/img/note.jpg";
@@ -272,7 +291,7 @@ export const renderFavorites = (favoriteSongs, activeIndex, onSelectSong, onRemo
         info.className = "flex flex-col min-w-0";
 
         const title = document.createElement("span");
-        title.className = "text-xs font-semibold text-white truncate";
+        title.className = "song-title text-xs font-semibold text-white truncate transition-colors";
         title.textContent = song.title;
 
         const author = document.createElement("span");
@@ -346,9 +365,9 @@ export const toggleButtonVisual = (button, isActive) => {
     if (!button) return;
     if (isActive) {
         button.classList.remove("text-zinc-400");
-        button.classList.add("text-blue-400");
+        button.classList.add("text-pink-600");
     } else {
-        button.classList.remove("text-blue-400");
+        button.classList.remove("text-pink-600");
         button.classList.add("text-zinc-400");
     }
 };

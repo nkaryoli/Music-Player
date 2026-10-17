@@ -1,0 +1,126 @@
+:root {
+    --primary-color: oklch(59.2% 0.249 0.584);
+    --hover-primary: #ee40c2;
+    --accent-red: #ff1239;
+    --accent-purple: oklch(39.8% 0.195 277.366);
+    --gradient-primary: linear-gradient(to bottom right, var(--accent-red), var(--accent-purple));
+}
+
+.bg-gradient-brand {
+    background: var(--gradient-primary);
+}
+
+.purple-active {
+    color: var(--primary-color);
+}
+
+.purple-active:hover {
+    color: var(--hover-primary);
+}
+
+.border-primary {
+    border-color: var(--primary-color);
+}
+
+.purple-hover {
+    transition: color 0.3s ease;
+}
+
+.purple-hover:hover {
+    color: var(--primary-color);
+}
+
+.slider-vertical {
+    writing-mode: vertical-lr;
+    direction: rtl;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 20px;
+    height: 100%;
+    min-height: 100px;
+    max-height: 150px;
+    padding: 0;
+    margin: 0;
+    outline: none;
+}
+
+.slider-vertical::-webkit-slider-runnable-track {
+    width: 12px;
+    height: 100%;
+    background: #1e2738;
+    border-radius: 9999px;
+    margin: 0 auto;
+}
+
+.slider-vertical::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin-left: -3px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.slider-vertical:hover::-webkit-slider-thumb {
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6);
+    transform: scale(1.1);
+}
+
+.slider-vertical::-moz-range-track {
+    width: 12px;
+    height: 100%;
+    background: #1e2738;
+    border-radius: 9999px;
+}
+
+.slider-vertical::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+/* ==========================================
+   SCROLLBAR PERSONALIZADA
+   ========================================== */
+
+/* 1. Estándar para Firefox */
+#list, #favorites-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
+}
+
+/* 2. Para Chrome, Edge y Safari */
+#list::-webkit-scrollbar, 
+#favorites-list::-webkit-scrollbar {
+    width: 6px; /* Ancho de la barra */
+}
+
+/* Fondo del carril por donde se mueve */
+#list::-webkit-scrollbar-track, 
+#favorites-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* La barra que se desliza (Thumb) */
+#list::-webkit-scrollbar-thumb, 
+#favorites-list::-webkit-scrollbar-thumb {
+    background: #3f3f46; /* Gris oscuro discreto por defecto */
+    border-radius: 9999px; /* Bordes redondeados */
+    transition: background 0.2s ease;
+}
+
+/* Al pasar el ratón por encima de la barra */
+#list::-webkit-scrollbar-thumb:hover, 
+#favorites-list::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-primary); /* Rosa acorde a tu diseño */
+}
