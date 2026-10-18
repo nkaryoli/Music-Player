@@ -12,13 +12,9 @@ let currentIndex = 0;
  */
 export const fetchSongs = async () => {
     try {
-        let response;
-        try {
-            response = await fetch("./src/data/music.json");
-            if (!response.ok) throw new Error("Fallback fetch required");
-        } catch {
-            response = await fetch("/src/data/music.json");
-        }
+        const response = await fetch("/src/data/music.json");
+        if (!response.ok) throw new Error("No se pudo cargar el catálogo musical");
+
         songs = await response.json();
         return songs;
     } catch (error) {

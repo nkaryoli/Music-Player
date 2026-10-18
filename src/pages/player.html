@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Reproductor Musical</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link rel="stylesheet" href="../styles/style.css" />
+</head>
+
+<body class="bg-black text-white h-screen flex flex-col overflow-hidden">
+	<!-- ====================================== HEADER =========================================== -->
+	<header class="flex justify-between items-center px-4 py-2 h-16">
+		<div class="flex items-center gap-3">
+			<img src="../assets/img/note.jpg" alt="Logo" class="w-10 h-10 rounded-lg object-cover" />
+			<h1 class="text-xl font-bold tracking-tight text-white">Sonara</h1>
+		</div>
+
+		<div class="flex items-center gap-3 absolute top-2 left-1/2 translate-x-[-50%]">
+			<div class="relative flex items-center">
+				<input id="search-input" type="text" placeholder="¿Qué quieres escuchar?"
+					class="bg-neutral-900 rounded-full py-2 pl-9 pr-4 min-w-96 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-pink-600 transition" />
+				<i class="fa-solid fa-magnifying-glass text-zinc-500 absolute left-3 pointer-events-none"></i>
+			</div>
+		</div>
+
+		<div class="flex items-center gap-3">
+			<div
+				class="p-0.5 rounded-full cursor-pointer hover:opacity-90 transition bg-gradient-to-br from-pink-600 to-indigo-800">
+				<img src="https://picsum.photos/id/237/200/300" alt="userpic" class="w-8 h-8 rounded-full" />
+			</div>
+			<button id="logout-btn" title="Cerrar sesión"
+				class="border border-zinc-600 hover:border-pink-800 hover:text-pink-600 h-9 w-8 rounded-lg cursor-pointer">
+				<i class="fa-solid fa-arrow-right-from-bracket text-md"></i>
+			</button>
+		</div>
+	</header>
+
+	<!-- ======================================= SECCION CENTRAL ========================================================= -->
+	<section class="relative flex-1 min-h-0 w-full mx-auto grid grid-cols-4 gap-4 px-4 pb-4">
+		<!-- ---------------------- Lista de Favoritos ------------------------------ -->
+		<div class="bg-neutral-900/50 col-span-1 pl-4 pt-4 rounded-lg shadow-md flex flex-col min-h-0">
+			<h2 class="text-lg font-bold mb-4 pr-4 text-white flex items-center justify-between">
+				<span class="flex items-center gap-2"><i class="fa-solid fa-heart text-red-500"></i>
+					Favoritas
+				</span>
+				<span id="favorites-count" class="text-xs text-zinc-400 font-mono">0</span>
+			</h2>
+			<ul id="favorites-list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2"></ul>
+		</div>
+
+		<!-- ---------------------- Lista de Reproducción ------------------------------ -->
+		<div class="bg-neutral-900/50 pl-4 pt-4 col-span-2 rounded-lg shadow-md flex flex-col min-h-0">
+			<h2 class="text-lg font-bold mb-4 pr-4 text-white flex items-center justify-between">
+				<span class="flex items-center gap-2"><i class="fa-solid fa-music text-pink-600"></i>
+					Lista de Reproducción
+				</span>
+				<span id="playlist-count" class="text-xs text-zinc-400 font-mono">0 canciones</span>
+			</h2>
+			<ul id="list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2"></ul>
+		</div>
+
+		<!-- --------------------- Panel Derecho: 'sonando ahora' ----------------------- -->
+		<div id="right-panel" class="flex flex-col min-h-0 h-full">
+			<div id="current-song" class="relative flex-1 min-h-0 rounded-lg overflow-hidden shadow-2xl flex flex-col justify-between border border-neutral-900/50">
+
+				<img id="current-song-bg" src="../assets/img/note.jpg" alt="Fondo"
+					class="absolute inset-0 w-full h-full object-cover scale-105 filter blur-[2px] brightness-[0.45] transition-all duration-700 pointer-events-none" 
+				/>
+				<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/60 pointer-events-none"></div>
+
+				<div class="relative z-10 flex items-center justify-between p-5 w-full">
+					<span
+						class="text-[10px] font-bold tracking-widest text-pink-400 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full uppercase border border-white/10 shadow">
+						SONANDO AHORA
+					</span>
+					<button id="expand-btn"
+						class="text-xs px-3 rounded-2xl hover:text-pink-400 group text-white backdrop-blur-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95"
+						title="Expandir vista">
+						<span class="font-semibold group-hover:underline underline-offset-4">Equalizador</span>
+						<i class="fa-solid fa-up-right-and-down-left-from-center group-hover:scale-115 mt-0.5"></i>
+					</button>
+				</div>
+
+				<div class="relative z-10 flex flex-col items-center justify-center my-auto min-h-0 py-3 pb-32">
+					<div class="relative group/cover">
+						<img id="current-song-img" src="../assets/img/note.jpg" alt="Portada"
+							class="w-44 h-44 sm:w-52 sm:h-52 rounded-2xl object-cover shadow-2xl border border-white/15 transition-transform duration-500 group-hover/cover:scale-105" />
+						<div class="absolute inset-0 rounded-2xl shadow-[inset_0_0_20px_rgba(0,0,0,0.6)] pointer-events-none"></div>
+					</div>
+				</div>
+
+				<div class="absolute bottom-0 left-0 w-full z-10 flex items-end justify-between gap-3 bg-linear-to-b from-black/0 via-neutral-900/40 to-neutral-900/50 p-6 pt-14">
+					<div class="flex flex-col min-w-0 flex-1">
+						<h3 id="current-song-title" class="text-3xl font-bold text-white truncate leading-snug drop-shadow-md">
+							Song Title
+						</h3>
+						<p id="current-song-artist" class="text-sm text-zinc-300 truncate drop-shadow">
+							Artist Name
+						</p>
+						<span id="current-song-genre"
+							class="self-start text-sm bg-pink-600/40 text-pink-100 border border-pink-500/50 px-2.5 py-0.5 rounded-full mt-1.5 font-medium">
+							Género
+						</span>
+					</div>
+					<button id="favorite-current-btn"
+						class="text-zinc-400 hover:text-red-500 p-2 text-xl transition cursor-pointer shrink-0 hover:scale-110 active:scale-95"
+						title="Añadir a favoritas">
+						<i class="fa-regular fa-heart"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Vista Expandida dentro de la sección central -->
+		<div id="expanded-view"
+			class="absolute inset-y-0 left-0 right-0 z-30 bg-black/10 backdrop-blur-2xl flex flex-col shadow-2xl hidden overflow-hidden transition-all duration-300">
+			<img id="expanded-bg" src="../assets/img/note.jpg" alt="Fondo Expandido"
+				class="absolute inset-0 w-full h-full object-cover filter blur-sm opacity-90 pointer-events-none" />
+			<div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black pointer-events-none"></div>
+
+			<div class="absolute top-2 right-4 z-20">
+				<button id="close-expanded-btn"
+					class="p-2.5 text-xs group rounded-full border border-zinc-800 hover:border-pink-600 text-zinc-300 hover:text-pink-500 transition flex items-center justify-center cursor-pointer active:scale-95"
+					title="Contraer vista">
+					<i class="fa-solid fa-down-left-and-up-right-to-center group-hover:scale-115"></i>
+				</button>
+			</div>
+
+			<div class="relative z-10 flex-1 min-h-0 grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-center py-2 max-w-5xl w-full mx-auto">
+				<div class="flex flex-col items-center text-center gap-4">
+					<div class="relative group">
+						<img id="expanded-song-img" src="../assets/img/note.jpg" alt="Portada"
+							class="w-52 h-52 sm:w-64 sm:h-64 rounded-2xl object-cover shadow-2xl transition-transform duration-700 group-hover:scale-105" />
+						<div class="absolute inset-0 rounded-2xl shadow-[inset_0_0_30px_rgba(0,0,0,0.7)] pointer-events-none"></div>
+					</div>
+					<div class="space-y-1 max-w-md w-full">
+						<h2 id="expanded-song-title" class="text-xl sm:text-2xl font-extrabold text-white truncate drop-shadow-lg">
+							Song Title
+						</h2>
+						<p id="expanded-song-artist" class="text-sm text-zinc-400 truncate">
+							Artist Name
+						</p>
+						<span id="expanded-song-genre"
+							class="inline-block text-xs bg-pink-600/30 text-pink-300 border border-pink-500/30 px-3 py-0.5 rounded-full font-medium mt-1">Género</span>
+					</div>
+				</div>
+
+				<!-- Tarjeta del Ecualizador -->
+				<div id="equalizer"	class="col-span-2 bg-black/50 backdrop-blur-xl p-4 sm:p-5 rounded-xl shadow-2xl flex flex-col gap-3 justify-between w-full h-[380px] md:h-[470px] lg:h-[500px]">
+					<div class="flex items-center justify-between shrink-0">
+						<div class="flex items-center gap-2">
+							<i class="fa-solid fa-sliders text-pink-500"></i>
+							<h3 class="font-bold text-white text-sm">Ecualizador</h3>
+						</div>
+						<span class="text-xs text-zinc-400 font-mono">espectro en vivo</span>
+					</div>
+					<!-- Espectro en vivo -->
+					<div class="bg-black/50 rounded-lg p-2.5 h-32 sm:h-36 shrink-0 flex items-center justify-center overflow-hidden">
+						<canvas id="spectrum-canvas" class="w-full h-full block"></canvas>
+					</div>
+					<!-- Bandas: Graves, Medios, Agudos -->
+					<div class="grid grid-cols-3 gap-3 flex-1 min-h-0">
+						<div class="bg-black/40 rounded-lg p-2 flex flex-col items-center justify-between min-h-0">
+							<span class="text-[11px] text-zinc-300 font-semibold">Graves</span>
+							<div class="flex-1 w-full flex items-center justify-center my-1 min-h-0">
+								<input type="range" id="eq-bass" min="-12" max="12" value="0" step="1" class="slider-vertical" />
+							</div>
+							<span id="bass-val" class="text-xs text-pink-400 font-mono font-medium">0 dB</span>
+						</div>
+						<div class="bg-black/40 rounded-lg p-2 flex flex-col items-center justify-between min-h-0">
+							<span class="text-[11px] text-zinc-300 font-semibold">Medios</span>
+							<div class="flex-1 w-full flex items-center justify-center my-1 min-h-0">
+								<input type="range" id="eq-mid" min="-12" max="12" value="0" step="1" class="slider-vertical" />
+							</div>
+							<span id="mid-val" class="text-xs text-pink-400 font-mono font-medium">0 dB</span>
+						</div>
+						<div class="bg-black/40 rounded-lg p-2 flex flex-col items-center justify-between min-h-0">
+							<span class="text-[11px] text-zinc-300 font-semibold">Agudos</span>
+							<div class="flex-1 w-full flex items-center justify-center my-1 min-h-0">
+								<input type="range" id="eq-treble" min="-12" max="12" value="0" step="1" class="slider-vertical" />
+							</div>
+							<span id="treble-val" class="text-xs text-pink-400 font-mono font-medium">0 dB</span>
+						</div>
+					</div>
+					<button id="reset-eq"
+						class="shrink-0 w-full py-3 px-3 rounded-full hover:border-pink-500 bg-neutral-900/50 hover:bg-neutral-900 text-zinc-300 hover:text-white text-xs font-semibold transition cursor-pointer text-center">
+						Restablecer ecualizador
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!--======================== PANEL INFERIOR / REPRODUCTOR ================================================= -->
+	<div class="w-full grid grid-cols-3 items-center bg-neutral-900/50 p-3 flex-shrink-0 shadow-2xl">
+		<div class="flex items-center gap-3 min-w-0">
+			<img id="song-img" src="../assets/img/note.jpg" alt="Music Note"
+				class="w-12 h-12 rounded-lg object-cover flex-shrink-0 shadow" />
+			<div class="min-w-0">
+				<h3 id="song-title" class="text-sm font-semibold text-white truncate">
+					Song Title
+				</h3>
+				<p id="song-author" class="text-xs text-zinc-400 truncate">
+					By Unknown
+				</p>
+			</div>
+		</div>
+
+		<div class="space-y-2">
+			<div id="controls" class="flex items-center justify-center gap-5">
+				<button id="shuffle" class="text-sm text-zinc-400 hover:text-pink-500 transition cursor-pointer"
+					title="Aleatorio">
+					<i class="fa-solid fa-shuffle"></i>
+				</button>
+				<button id="previous" class="text-lg text-zinc-300 hover:text-pink-500 transition cursor-pointer"
+					title="Anterior">
+					<i class="fa-solid fa-backward-step"></i>
+				</button>
+				<button id="play"
+					class="text-3xl text-pink-600 hover:text-pink-500 hover:scale-105 active:scale-95 transition cursor-pointer"
+					title="Reproducir/Pausar">
+					<i class="fa-sharp fa-solid fa-circle-play"></i>
+				</button>
+				<button id="next" class="text-lg text-zinc-300 hover:text-pink-500 transition cursor-pointer" title="Siguiente">
+					<i class="fa-sharp fa-solid fa-forward-step"></i>
+				</button>
+				<button id="repeat" class="text-sm text-zinc-400 hover:text-pink-500 transition cursor-pointer" title="Repetir">
+					<i class="fa-solid fa-repeat"></i>
+				</button>
+			</div>
+
+			<div class="w-full flex items-center justify-center gap-3">
+				<small id="current-time" class="text-xs font-mono text-zinc-400 w-10 text-right">0:00</small>
+				<input id="progress-bar" type="range" min="0" max="0" value="0"
+					class="w-full accent-pink-600 cursor-pointer h-1.5 bg-zinc-700 rounded-lg" />
+				<small id="total-time" class="text-xs font-mono text-zinc-400 w-10">0:00</small>
+			</div>
+		</div>
+
+		<div id="volume-controls" class="flex items-center justify-end gap-3">
+			<button id="mute-btn" class="text-zinc-400 hover:text-pink-500 transition cursor-pointer" title="Silenciar">
+				<i class="fa-solid fa-volume-high"></i>
+			</button>
+			<input type="range" id="volume" min="0" max="1" value="0.2" step="0.1"
+				class="w-24 accent-pink-600 cursor-pointer h-1.5 bg-zinc-700 rounded-lg" />
+			<small id="volume-value" class="text-xs font-mono text-zinc-400 w-4">2</small>
+			<button id="fullscreen-btn" class="text-zinc-400 hover:text-pink-500 transition cursor-pointer ml-2"
+				title="Pantalla completa">
+				<i class="fa-solid fa-expand"></i>
+			</button>
+		</div>
+	</div>
+
+	<script type="module" src="../js/auth/player-auth.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/howler@2.2.4/dist/howler.min.js"></script>
+	<script type="module" src="../js/app.js"></script>
+</body>
+
+</html>
