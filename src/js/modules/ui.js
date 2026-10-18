@@ -36,12 +36,23 @@ export const elements = {
     volumeValue: document.querySelector("#volume-value"),
     fullscreenBtn: document.querySelector("#fullscreen-btn"),
 
-    // Tarjeta "Sonando Ahora"
+    // Tarjeta "Sonando Ahora" (Panel Derecho)
+    currentSongBg: document.querySelector("#current-song-bg"),
     currentSongImg: document.querySelector("#current-song-img"),
     currentSongTitle: document.querySelector("#current-song-title"),
     currentSongArtist: document.querySelector("#current-song-artist"),
     currentSongGenre: document.querySelector("#current-song-genre"),
-    favoriteCurrentBtn: document.querySelector("#favorite-current-btn")
+    favoriteCurrentBtn: document.querySelector("#favorite-current-btn"),
+    expandBtn: document.querySelector("#expand-btn"),
+
+    // Vista Expandida (Pantalla Completa)
+    expandedView: document.querySelector("#expanded-view"),
+    closeExpandedBtn: document.querySelector("#close-expanded-btn"),
+    expandedBg: document.querySelector("#expanded-bg"),
+    expandedSongImg: document.querySelector("#expanded-song-img"),
+    expandedSongTitle: document.querySelector("#expanded-song-title"),
+    expandedSongArtist: document.querySelector("#expanded-song-artist"),
+    expandedSongGenre: document.querySelector("#expanded-song-genre")
 };
 
 /**
@@ -57,33 +68,66 @@ export const formatTime = (seconds) => {
 };
 
 /**
- * Actualiza la información de la canción en la barra inferior y en la tarjeta "Sonando Ahora".
+ * Abre la vista expandida inmersiva.
+ */
+export const openExpandedView = () => {
+    if (elements.expandedView) {
+        elements.expandedView.classList.remove("hidden");
+    }
+};
+
+/**
+ * Cierra la vista expandida inmersiva.
+ */
+export const closeExpandedView = () => {
+    if (elements.expandedView) {
+        elements.expandedView.classList.add("hidden");
+    }
+};
+
+/**
+ * Actualiza la información de la canción en la barra inferior, en la tarjeta "Sonando Ahora" y en la vista expandida.
  * @param {Object} song Datos de la canción activa.
  * @param {boolean} isFav Si la canción está en favoritas.
  */
 export const updateCurrentSongUI = (song, isFav = false) => {
     if (!song) return;
 
+    const coverUrl = song.cover || "./src/assets/img/note.jpg";
+
     // Barra inferior
     if (elements.songTitle) elements.songTitle.textContent = song.title;
     if (elements.songAuthor) elements.songAuthor.textContent = song.artist;
     if (elements.songImg) {
-        elements.songImg.src = song.cover || "./src/assets/img/note.jpg";
-        elements.songImg.onerror = () => {
-            elements.songImg.src = "./src/assets/img/note.jpg";
-        };
+        elements.songImg.src = coverUrl;
+        elements.songImg.onerror = () => { elements.songImg.src = "./src/assets/img/note.jpg"; };
     }
 
-    // Tarjeta "Sonando Ahora"
+    // Tarjeta "Sonando Ahora" (Panel Derecho con fondo de portada)
+    if (elements.currentSongBg) {
+        elements.currentSongBg.src = coverUrl;
+        elements.currentSongBg.onerror = () => { elements.currentSongBg.src = "./src/assets/img/note.jpg"; };
+    }
     if (elements.currentSongTitle) elements.currentSongTitle.textContent = song.title;
     if (elements.currentSongArtist) elements.currentSongArtist.textContent = song.artist;
     if (elements.currentSongGenre) elements.currentSongGenre.textContent = song.genre || "Música";
     if (elements.currentSongImg) {
-        elements.currentSongImg.src = song.cover || "./src/assets/img/note.jpg";
-        elements.currentSongImg.onerror = () => {
-            elements.currentSongImg.src = "./src/assets/img/note.jpg";
-        };
+        elements.currentSongImg.src = coverUrl;
+        elements.currentSongImg.onerror = () => { elements.currentSongImg.src = "./src/assets/img/note.jpg"; };
     }
+
+    // Vista Expandida
+    if (elements.expandedBg) {
+        elements.expandedBg.src = coverUrl;
+        elements.expandedBg.onerror = () => { elements.expandedBg.src = "./src/assets/img/note.jpg"; };
+    }
+    if (elements.expandedSongImg) {
+        elements.expandedSongImg.src = coverUrl;
+        elements.expandedSongImg.onerror = () => { elements.expandedSongImg.src = "./src/assets/img/note.jpg"; };
+    }
+    if (elements.expandedSongTitle) elements.expandedSongTitle.textContent = song.title;
+    if (elements.expandedSongArtist) elements.expandedSongArtist.textContent = song.artist;
+    if (elements.expandedSongGenre) elements.expandedSongGenre.textContent = song.genre || "Música";
 
     updateFavoriteCurrentBtn(isFav);
 };

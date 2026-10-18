@@ -1,8 +1,8 @@
 :root {
-    --primary-color: oklch(59.2% 0.249 0.584);
+    --primary-color: #e60076;
     --hover-primary: #ee40c2;
     --accent-red: #ff1239;
-    --accent-purple: oklch(39.8% 0.195 277.366);
+    --accent-purple: #372aac;
     --gradient-primary: linear-gradient(to bottom right, var(--accent-red), var(--accent-purple));
 }
 
@@ -94,33 +94,38 @@
    ========================================== */
 
 /* 1. Estándar para Firefox */
-#list, #favorites-list {
+#list,
+#favorites-list {
     scrollbar-width: thin;
     scrollbar-color: var(--primary-color) transparent;
 }
 
 /* 2. Para Chrome, Edge y Safari */
-#list::-webkit-scrollbar, 
+#list::-webkit-scrollbar,
 #favorites-list::-webkit-scrollbar {
-    width: 6px; /* Ancho de la barra */
+    width: 6px;
+    /* Ancho de la barra */
 }
 
 /* Fondo del carril por donde se mueve */
-#list::-webkit-scrollbar-track, 
+#list::-webkit-scrollbar-track,
 #favorites-list::-webkit-scrollbar-track {
     background: transparent;
 }
 
 /* La barra que se desliza (Thumb) */
-#list::-webkit-scrollbar-thumb, 
+#list::-webkit-scrollbar-thumb,
 #favorites-list::-webkit-scrollbar-thumb {
-    background: #3f3f46; /* Gris oscuro discreto por defecto */
-    border-radius: 9999px; /* Bordes redondeados */
+    background: #3f3f46;
+    /* Gris oscuro discreto por defecto */
+    border-radius: 9999px;
+    /* Bordes redondeados */
     transition: background 0.2s ease;
 }
 
 /* Al pasar el ratón por encima de la barra */
-#list::-webkit-scrollbar-thumb:hover, 
+#list::-webkit-scrollbar-thumb:hover,
 #favorites-list::-webkit-scrollbar-thumb:hover {
-    background: var(--hover-primary); /* Rosa acorde a tu diseño */
+    background: var(--hover-primary);
+    /* Rosa acorde a tu diseño */
 }

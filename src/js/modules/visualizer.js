@@ -5,9 +5,9 @@
 
 const numBars = 32;
 const baseProfile = [
-    0.85, 0.76, 0.82, 0.88, 0.70, 0.55, 0.50, 0.48, 
-    0.52, 0.54, 0.58, 0.65, 0.60, 0.52, 0.56, 0.48, 
-    0.42, 0.44, 0.45, 0.42, 0.40, 0.38, 0.36, 0.38, 
+    0.85, 0.76, 0.82, 0.88, 0.70, 0.55, 0.50, 0.48,
+    0.52, 0.54, 0.58, 0.65, 0.60, 0.52, 0.56, 0.48,
+    0.42, 0.44, 0.45, 0.42, 0.40, 0.38, 0.36, 0.38,
     0.35, 0.33, 0.31, 0.30, 0.32, 0.30, 0.28, 0.27
 ];
 const currentHeights = [...baseProfile];
@@ -107,9 +107,9 @@ export const initVisualizer = (isPlayingFn = () => false) => {
 
             // Degradado violeta
             const grad = ctx.createLinearGradient(0, height, 0, y);
-            grad.addColorStop(0, "#7c3aed");
-            grad.addColorStop(0.5, "#a855f7");
-            grad.addColorStop(1, "#c084fc");
+            grad.addColorStop(0, "#ff1239");
+            grad.addColorStop(0.5, "#f824c3ff");
+            grad.addColorStop(1, "#9b30ffff");
 
             ctx.fillStyle = grad;
             ctx.beginPath();

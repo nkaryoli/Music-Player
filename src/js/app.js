@@ -18,7 +18,9 @@ import {
     toggleButtonVisual,
     updateVolumeUI,
     toggleFullscreen,
-    syncFullscreenIcon
+    syncFullscreenIcon,
+    openExpandedView,
+    closeExpandedView
 } from "./modules/ui.js";
 
 import {
@@ -202,11 +204,27 @@ const setupEventListeners = () => {
         });
     }
 
-    // Pantalla completa
+    // Pantalla completa (Navegador)
     if (elements.fullscreenBtn) {
         elements.fullscreenBtn.addEventListener("click", toggleFullscreen);
         document.addEventListener("fullscreenchange", syncFullscreenIcon);
     }
+
+    // Vista expandida con Ecualizador
+    if (elements.expandBtn) {
+        elements.expandBtn.addEventListener("click", openExpandedView);
+    }
+
+    if (elements.closeExpandedBtn) {
+        elements.closeExpandedBtn.addEventListener("click", closeExpandedView);
+    }
+
+    // Cerrar vista expandida con la tecla Escape
+    document.addEventListener("keydown", (e) => {
+        if (e.code === "Escape") {
+            closeExpandedView();
+        }
+    });
 };
 
 // ==========================================
