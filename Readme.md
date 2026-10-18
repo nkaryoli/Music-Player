@@ -15,7 +15,6 @@ Aplicación web frontend para reproducir música desde el navegador. El proyecto
 - [Persistencia de datos](#persistencia-de-datos)
 - [Configuración de canciones](#configuración-de-canciones)
 - [Solución de problemas](#solución-de-problemas)
-- [Limitaciones](#limitaciones)
 
 ## Características
 
