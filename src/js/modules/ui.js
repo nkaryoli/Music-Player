@@ -180,6 +180,12 @@ export const updateActiveSongHighlight = (activeIndex) => {
 
             if (isActive) {
                 item.classList.add("bg-neutral-900", "border-l-4", "border-pink-600");
+                if (listEl === elements.musicList) {
+                    item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+                if (listEl === elements.favoritesList) {
+                  item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             } else {
                 item.classList.remove("bg-neutral-900", "border-l-4", "border-pink-600");
             }
