@@ -8,7 +8,8 @@ let currentSongData = null;
 let isOnRepeat = false;
 let isOnShuffle = false;
 let isMuted = false;
-let isDraggingProgress = false;
+let progressFrameId = null;
+let shouldUpdateProgress = false;
 let callbacks = {
     onLoad: () => {},
     onPlay: () => {},
@@ -31,12 +32,19 @@ export const initPlayer = (eventCallbacks = {}, initialVolume = 0.2) => {
  * Bucle de animación para emitir el progreso de reproducción continuo.
  */
 const startProgressLoop = () => {
-    if (!sound || !sound.playing() || isDraggingProgress) return;
+    progressFrameId = null;
+    if (!sound || !shouldUpdateProgress) return;
 
     const currentTime = typeof sound.seek() === "number" ? sound.seek() : 0;
     callbacks.onProgress(currentTime, sound.duration() || 0);
 
-    requestAnimationFrame(startProgressLoop);
+    progressFrameId = requestAnimationFrame(startProgressLoop);
+};
+
+const scheduleProgressLoop = () => {
+    if (!progressFrameId && sound && shouldUpdateProgress) {
+        progressFrameId = requestAnimationFrame(startProgressLoop);
+    }
 };
 
 /**
@@ -49,6 +57,7 @@ export const loadSong = (song, autoPlay = false) => {
     currentSongData = song;
 
     if (sound) {
+        shouldUpdateProgress = false;
         sound.stop();
         sound.unload();
         sound = null;
@@ -65,16 +74,20 @@ export const loadSong = (song, autoPlay = false) => {
             console.error("Error al cargar pista de audio:", song.src, err);
         },
         onplay: () => {
+            shouldUpdateProgress = true;
             callbacks.onPlay();
-            requestAnimationFrame(startProgressLoop);
+            scheduleProgressLoop();
         },
         onpause: () => {
+            shouldUpdateProgress = false;
             callbacks.onPause();
         },
         onstop: () => {
+            shouldUpdateProgress = false;
             callbacks.onPause();
         },
         onend: () => {
+            shouldUpdateProgress = false;
             callbacks.onEnd(isOnRepeat, isOnShuffle);
         }
     });
@@ -129,6 +142,7 @@ export const isPlaying = () => {
 export const seek = (time) => {
     if (sound) {
         sound.seek(time);
+        scheduleProgressLoop();
     }
 };
 
@@ -193,11 +207,3 @@ export const toggleShuffle = () => {
 };
 
 export const isShuffleActive = () => isOnShuffle;
-
-/**
- * Notifica al reproductor si el usuario está arrastrando la barra de progreso para pausar las actualizaciones del bucle.
- * @param {boolean} dragging True mientras se arrastra.
- */
-export const setDraggingProgress = (dragging) => {
-    isDraggingProgress = dragging;
-};

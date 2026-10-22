@@ -37,7 +37,6 @@ import {
     isRepeatActive,
     toggleShuffle,
     isShuffleActive,
-    setDraggingProgress,
     getCurrentTime,
     getDuration
 } from "./modules/player.js";
@@ -154,17 +153,11 @@ const setupEventListeners = () => {
 
     // Barra de progreso
     elements.progressBar.addEventListener("input", () => {
-        setDraggingProgress(true);
         const targetTime = Number(elements.progressBar.value);
+        seek(targetTime);
         if (elements.currentTime) {
             elements.currentTime.textContent = formatTime(targetTime);
         }
-    });
-
-    elements.progressBar.addEventListener("change", () => {
-        const targetTime = Number(elements.progressBar.value);
-        seek(targetTime);
-        setDraggingProgress(false);
     });
 
     // Controles de volumen
