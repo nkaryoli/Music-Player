@@ -179,7 +179,7 @@ export const updateActiveSongHighlight = (activeIndex) => {
             }
 
             if (isActive) {
-                item.classList.add("bg-neutral-900", "border-l-4", "border-pink-600");
+                item.classList.add("bg-neutral-900", "border-l-4", "border-pink-600", "is-active");
                 if (listEl === elements.musicList) {
                     item.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
@@ -187,13 +187,38 @@ export const updateActiveSongHighlight = (activeIndex) => {
                     item.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
             } else {
-                item.classList.remove("bg-neutral-900", "border-l-4", "border-pink-600");
+                item.classList.remove("bg-neutral-900", "border-l-4", "border-pink-600", "is-active");
             }
         });
     };
 
     updateList(elements.musicList);
     updateList(elements.favoritesList);
+    updateActiveSongPlayback(false);
+};
+
+/**
+ * Activa o detiene el ecualizador visual de la canción activa.
+ * @param {boolean} isPlaying Indica si la canción está reproduciéndose.
+ */
+export const updateActiveSongPlayback = (isPlaying) => {
+    const lists = [elements.musicList, elements.favoritesList];
+    lists.forEach((listEl) => {
+        if (!listEl) return;
+        const indicators = listEl.querySelectorAll(".song-playing-indicator");
+        indicators.forEach((indicator) => {
+            const isActive = indicator.closest("li[data-song-index]")?.classList.contains("is-active");
+            indicator.classList.toggle("is-playing", Boolean(isPlaying && isActive));
+        });
+    });
+};
+
+const createPlaybackIndicator = () => {
+    const indicator = document.createElement("span");
+    indicator.className = "song-playing-indicator";
+    indicator.setAttribute("aria-label", "Reproduciendo");
+    indicator.innerHTML = "<i></i><i></i><i></i><i></i>";
+    return indicator;
 };
 
 /**
@@ -267,6 +292,7 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
         leftWrapper.appendChild(trackNumber);
         leftWrapper.appendChild(img);
         leftWrapper.appendChild(info);
+        const playbackIndicator = createPlaybackIndicator();
 
         const favBtn = document.createElement("button");
         favBtn.dataset.favoriteBtn = song.id;
@@ -283,6 +309,7 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
         });
 
         li.appendChild(leftWrapper);
+        li.appendChild(playbackIndicator);
         li.appendChild(favBtn);
 
         li.addEventListener("click", () => {
@@ -358,6 +385,7 @@ export const renderFavorites = (
 
         leftWrapper.appendChild(img);
         leftWrapper.appendChild(info);
+        const playbackIndicator = createPlaybackIndicator();
 
         const removeBtn = document.createElement("button");
         removeBtn.className = "text-zinc-600 hover:text-red-400 p-1.5 text-xs transition cursor-pointer";
@@ -370,6 +398,7 @@ export const renderFavorites = (
         });
 
         li.appendChild(leftWrapper);
+        li.appendChild(playbackIndicator);
         li.appendChild(removeBtn);
 
         li.addEventListener("click", () => {

@@ -15,6 +15,7 @@ import {
     renderFavorites,
     updateProgressBar,
     updatePlayBtn,
+    updateActiveSongPlayback,
     toggleButtonVisual,
     updateVolumeUI,
     toggleFullscreen,
@@ -162,6 +163,7 @@ const refreshViews = () => {
         (index) => handleSongSelection(index, "favorites"),
         handleToggleFavorite
     );
+    updateActiveSongPlayback(isPlaying());
 };
 
 // ==========================================
@@ -283,9 +285,11 @@ const initApp = async () => {
             },
             onPlay: () => {
                 updatePlayBtn(true);
+                updateActiveSongPlayback(true);
             },
             onPause: () => {
                 updatePlayBtn(false);
+                updateActiveSongPlayback(false);
             },
             onEnd: (isRepeat, isShuffle) => {
                 if (isRepeat) {
