@@ -42,12 +42,20 @@
 	<section class="relative flex-1 min-h-0 w-full mx-auto grid grid-cols-4 gap-4 px-4 pb-4">
 		<!-- ---------------------- Lista de Favoritos ------------------------------ -->
 		<div class="bg-neutral-900/50 col-span-1 pl-4 pt-4 rounded-lg shadow-md flex flex-col min-h-0">
-			<h2 class="text-lg font-bold mb-4 pr-4 text-white flex items-center justify-between">
-				<span class="flex items-center gap-2"><i class="fa-solid fa-heart text-red-500"></i>
-					Favoritas
-				</span>
-				<span id="favorites-count" class="text-xs text-zinc-400 font-mono">0</span>
-			</h2>
+			<div class="font-bold mb-4 pr-4 text-white flex items-start justify-between">
+				<div class="flex gap-2">
+					<span class="py-1">
+						<i class="fa-solid fa-heart text-red-500"></i>
+					</span>
+					<div>
+						<span class="text-lg">Favoritas</span>
+						<div class="text-xs text-zinc-400 font-mono">
+							<span id="favorites-count">0</span>
+							<span>canciones</span>
+						</div>
+					</div>
+				</div>
+			</div>
 			<ul id="favorites-list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2"></ul>
 		</div>
 

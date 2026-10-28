@@ -58,6 +58,39 @@ import { initShortcuts } from "./modules/shortcuts.js";
 
 // Estado local de volumen y silencio
 let isMuted = false;
+let isFavoritesPlayback = false;
+
+const getFavoriteIndexes = () => getAllSongs()
+    .map((song, index) => (isFavorite(song.id) ? index : -1))
+    .filter((index) => index >= 0);
+
+const getPlaybackIndex = (direction, isShuffle) => {
+    const favoriteIndexes = getFavoriteIndexes();
+    if (!isFavoritesPlayback || favoriteIndexes.length === 0) {
+        return direction === "next"
+            ? getNextIndex(isShuffle)
+            : getPreviousIndex(isShuffle);
+    }
+
+    const currentPosition = favoriteIndexes.indexOf(getCurrentIndex());
+    if (currentPosition < 0) {
+        return direction === "next"
+            ? favoriteIndexes[0]
+            : favoriteIndexes[favoriteIndexes.length - 1];
+    }
+    if (isShuffle) {
+        if (favoriteIndexes.length === 1) return favoriteIndexes[0];
+        let randomPosition;
+        do {
+            randomPosition = Math.floor(Math.random() * favoriteIndexes.length);
+        } while (randomPosition === currentPosition);
+        return favoriteIndexes[randomPosition];
+    }
+
+    const offset = direction === "next" ? 1 : -1;
+    const nextPosition = (currentPosition + offset + favoriteIndexes.length) % favoriteIndexes.length;
+    return favoriteIndexes[nextPosition];
+};
 
 /**
  * Cambia la canción activa y actualiza la interfaz.
@@ -78,8 +111,10 @@ const changeSong = (targetIndex, autoPlay = true) => {
  * Maneja la selección de una canción desde la lista o favoritas.
  * Si ya es la canción activa, alterna play/pausa; si es otra, la carga y reproduce.
  * @param {number} targetIndex Índice de la pista seleccionada.
+ * @param {"playlist"|"favorites"} source Lista desde la que se inició la reproducción.
  */
-const handleSongSelection = (targetIndex) => {
+const handleSongSelection = (targetIndex, source) => {
+    isFavoritesPlayback = source === "favorites";
     if (getCurrentIndex() === targetIndex) {
         togglePlay();
     } else {
@@ -93,6 +128,9 @@ const handleSongSelection = (targetIndex) => {
  */
 const handleToggleFavorite = (songId) => {
     const isFav = toggleFavorite(songId);
+    if (!isFav && isFavoritesPlayback && getFavoriteIndexes().length === 0) {
+        isFavoritesPlayback = false;
+    }
     const currentSong = getCurrentSong();
     if (currentSong && currentSong.id === songId) {
         updateCurrentSongUI(currentSong, isFav);
@@ -106,13 +144,24 @@ const handleToggleFavorite = (songId) => {
 const refreshViews = () => {
     const query = elements.searchInput ? elements.searchInput.value : "";
     const filtered = filterSongs(query);
-    renderPlaylist(filtered, getCurrentIndex(), handleSongSelection, handleToggleFavorite, isFavorite);
+    renderPlaylist(
+        filtered,
+        getCurrentIndex(),
+        (index) => handleSongSelection(index, "playlist"),
+        handleToggleFavorite,
+        isFavorite
+    );
 
     const allSongs = getAllSongs();
     const favSongs = allSongs
         .map((s, idx) => ({ ...s, originalIndex: idx }))
         .filter((s) => isFavorite(s.id));
-    renderFavorites(favSongs, getCurrentIndex(), handleSongSelection, handleToggleFavorite);
+    renderFavorites(
+        favSongs,
+        getCurrentIndex(),
+        (index) => handleSongSelection(index, "favorites"),
+        handleToggleFavorite
+    );
 };
 
 // ==========================================
@@ -125,7 +174,7 @@ const setupEventListeners = () => {
 
     elements.nextBtn.addEventListener("click", () => {
         const wasPlaying = isPlaying();
-        const nextIdx = getNextIndex(isShuffleActive());
+        const nextIdx = getPlaybackIndex("next", isShuffleActive());
         changeSong(nextIdx, wasPlaying);
     });
 
@@ -136,7 +185,7 @@ const setupEventListeners = () => {
             updateProgressBar(0, getDuration());
             return;
         }
-        const prevIdx = getPreviousIndex(isShuffleActive());
+        const prevIdx = getPlaybackIndex("previous", isShuffleActive());
         changeSong(prevIdx, wasPlaying);
     });
 
@@ -242,9 +291,12 @@ const initApp = async () => {
                 if (isRepeat) {
                     changeSong(getCurrentIndex(), true);
                 } else {
-                    const isLast = getCurrentIndex() === getAllSongs().length - 1;
-                    const nextIdx = getNextIndex(isShuffle);
-                    if (!isShuffle && isLast) {
+                    const favoriteIndexes = getFavoriteIndexes();
+                    const playbackIndexes = isFavoritesPlayback ? favoriteIndexes : getAllSongs().map((_song, index) => index);
+                    const currentPosition = playbackIndexes.indexOf(getCurrentIndex());
+                    const isLast = currentPosition === playbackIndexes.length - 1;
+                    const nextIdx = getPlaybackIndex("next", isShuffle);
+                    if (!isShuffle && isLast && !isFavoritesPlayback) {
                         changeSong(0, false);
                     } else {
                         changeSong(nextIdx, true);

@@ -184,7 +184,7 @@ export const updateActiveSongHighlight = (activeIndex) => {
                     item.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
                 if (listEl === elements.favoritesList) {
-                  item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    item.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
             } else {
                 item.classList.remove("bg-neutral-900", "border-l-4", "border-pink-600");
@@ -302,7 +302,12 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
  * @param {Function} onSelectSong Callback al pulsar una canción.
  * @param {Function} onRemoveFavorite Callback para quitar de favoritas.
  */
-export const renderFavorites = (favoriteSongs, activeIndex, onSelectSong, onRemoveFavorite) => {
+export const renderFavorites = (
+    favoriteSongs,
+    activeIndex,
+    onSelectSong,
+    onRemoveFavorite
+) => {
     if (!elements.favoritesList) return;
     elements.favoritesList.innerHTML = "";
 
