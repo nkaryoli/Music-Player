@@ -200,6 +200,31 @@ const refreshViews = () => {
 // ==========================================
 
 const setupEventListeners = () => {
+    const accordionPanels = [
+        { panel: document.querySelector("#favorites-panel"), button: document.querySelector("#favorites-toggle") },
+        { panel: document.querySelector("#playlist-panel"), button: document.querySelector("#playlist-toggle") }
+    ];
+
+    const toggleAccordionPanel = (panel, button) => {
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+        accordionPanels.forEach(({ panel: otherPanel, button: otherButton }) => {
+            const shouldExpand = otherPanel === panel && !isExpanded;
+            otherPanel?.classList.toggle("accordion-collapsed", !shouldExpand);
+            otherButton?.setAttribute("aria-expanded", String(shouldExpand));
+        });
+    };
+
+    accordionPanels.forEach(({ panel, button }) => {
+        button?.addEventListener("click", (event) => {
+            event.stopPropagation();
+            toggleAccordionPanel(panel, button);
+        });
+        panel?.querySelector(":scope > div:first-child, :scope > h2")?.addEventListener("click", () => {
+            toggleAccordionPanel(panel, button);
+        });
+    });
+
     // Controles de reproducción
     elements.playBtn.addEventListener("click", togglePlay);
 

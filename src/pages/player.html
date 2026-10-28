@@ -12,21 +12,21 @@
 
 <body class="bg-black text-white h-screen flex flex-col overflow-hidden">
 	<!-- ====================================== HEADER =========================================== -->
-	<header class="flex justify-between items-center px-4 py-2 h-16">
-		<div class="flex items-center gap-3">
+	<header id="player-header" class="px-4 py-2 h-16">
+		<div id="header-brand" class="flex items-center gap-3 min-w-0">
 			<img src="../assets/img/note.jpg" alt="Logo" class="w-10 h-10 rounded-lg object-cover" />
-			<h1 class="text-xl font-bold tracking-tight text-white">Sound Wave</h1>
+			<h1 class="text-xl font-bold tracking-tight text-white truncate">Sound Wave</h1>
 		</div>
 
-		<div class="flex items-center gap-3 absolute top-2 left-1/2 translate-x-[-50%]">
+		<div id="header-search" class="flex items-center gap-3">
 			<div class="relative flex items-center">
 				<input id="search-input" type="text" placeholder="¿Qué quieres escuchar?"
-					class="bg-neutral-900 rounded-full py-2 pl-9 pr-4 min-w-96 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-pink-600 transition" />
+					class="bg-neutral-900 rounded-full py-2 pl-9 pr-4 w-96 max-w-full text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-pink-600 transition" />
 				<i class="fa-solid fa-magnifying-glass text-zinc-500 absolute left-3 pointer-events-none"></i>
 			</div>
 		</div>
 
-		<div class="flex items-center gap-3">
+		<div id="header-actions" class="flex items-center gap-3">
 			<div
 				class="p-0.5 rounded-full cursor-pointer hover:opacity-90 transition bg-gradient-to-br from-pink-600 to-indigo-800">
 				<img src="https://picsum.photos/id/237/200/300" alt="userpic" class="w-8 h-8 rounded-full" />
@@ -39,9 +39,9 @@
 	</header>
 
 	<!-- ======================================= SECCION CENTRAL ========================================================= -->
-	<section class="relative flex-1 min-h-0 w-full mx-auto grid grid-cols-4 gap-4 px-4 pb-4">
+	<section id="main-layout" class="relative flex-1 min-h-0 w-full mx-auto grid grid-cols-4 gap-4 px-4 pb-4">
 		<!-- ---------------------- Lista de Favoritos ------------------------------ -->
-		<div class="bg-neutral-900/50 col-span-1 pl-4 pt-4 rounded-lg shadow-md flex flex-col min-h-0">
+		<div id="favorites-panel" class="accordion-collapsed bg-neutral-900/50 col-span-1 pl-4 pt-4 rounded-lg shadow-md flex flex-col min-h-0">
 			<div class="font-bold mb-4 pr-4 text-white flex items-start justify-between">
 				<div class="flex gap-2">
 					<span class="py-1">
@@ -55,17 +55,27 @@
 						</div>
 					</div>
 				</div>
+				<button id="favorites-toggle" type="button" class="accordion-toggle" aria-expanded="false">
+					<i class="fa-solid fa-chevron-down"></i>
+					<span class="sr-only">Mostrar favoritas</span>
+				</button>
 			</div>
 			<ul id="favorites-list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2"></ul>
 		</div>
 
 		<!-- ---------------------- Lista de Reproducción ------------------------------ -->
-		<div class="bg-neutral-900/50 pl-4 pt-4 col-span-2 rounded-lg shadow-md flex flex-col min-h-0">
+		<div id="playlist-panel" class="bg-neutral-900/50 pl-4 pt-4 col-span-2 rounded-lg shadow-md flex flex-col min-h-0">
 			<h2 class="text-lg font-bold mb-4 pr-4 text-white flex items-center justify-between">
 				<span class="flex items-center gap-2"><i class="fa-solid fa-music text-pink-600"></i>
 					Lista de Reproducción
 				</span>
-				<span id="playlist-count" class="text-xs text-zinc-400 font-mono">0 canciones</span>
+				<span class="flex items-center gap-2">
+					<span id="playlist-count" class="text-xs text-zinc-400 font-mono">0 canciones</span>
+					<button id="playlist-toggle" type="button" class="accordion-toggle" aria-expanded="true">
+						<i class="fa-solid fa-chevron-down"></i>
+						<span class="sr-only">Mostrar lista de reproducción</span>
+					</button>
+				</span>
 			</h2>
 			<ul id="list" class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-2"></ul>
 		</div>
@@ -137,7 +147,7 @@
 				</button>
 			</div>
 
-			<div class="relative z-10 flex-1 min-h-0 grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-center py-2 max-w-5xl w-full mx-auto">
+			<div id="expanded-content" class="relative z-10 flex-1 min-h-0 grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-center py-2 max-w-5xl w-full mx-auto">
 				<div class="flex flex-col items-center text-center gap-4">
 					<div class="relative group">
 						<img id="expanded-song-img" src="../assets/img/note.jpg" alt="Portada"
@@ -203,7 +213,7 @@
 	</section>
 
 	<!--======================== PANEL INFERIOR / REPRODUCTOR ================================================= -->
-	<div class="w-full grid grid-cols-3 items-center bg-neutral-900/50 p-3 flex-shrink-0 shadow-2xl">
+	<div id="player-footer" class="w-full grid grid-cols-3 items-center bg-neutral-900 lg:bg-neutral-900/50 p-3 flex-shrink-0 shadow-2xl">
 		<div class="flex items-center gap-3 min-w-0">
 			<img id="song-img" src="../assets/img/note.jpg" alt="Music Note"
 				class="w-12 h-12 rounded-lg object-cover flex-shrink-0 shadow" />
