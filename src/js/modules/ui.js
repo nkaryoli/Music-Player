@@ -221,6 +221,43 @@ const createPlaybackIndicator = () => {
     return indicator;
 };
 
+const addDragHandlers = (item, listEl, onReorder) => {
+    if (!onReorder) return;
+
+    item.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text/plain", item.dataset.songId);
+        event.dataTransfer.effectAllowed = "move";
+        item.classList.add("is-dragging");
+    });
+
+    item.addEventListener("dragend", () => {
+        item.classList.remove("is-dragging");
+        listEl.querySelectorAll("li.is-drag-over").forEach((target) => {
+            target.classList.remove("is-drag-over");
+        });
+    });
+
+    item.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        item.classList.add("is-drag-over");
+    });
+
+    item.addEventListener("dragleave", () => {
+        item.classList.remove("is-drag-over");
+    });
+
+    item.addEventListener("drop", (event) => {
+        event.preventDefault();
+        item.classList.remove("is-drag-over");
+        const sourceId = Number(event.dataTransfer.getData("text/plain"));
+        const targetId = Number(item.dataset.songId);
+        if (sourceId && targetId && sourceId !== targetId) {
+            onReorder(sourceId, targetId);
+        }
+    });
+};
+
 /**
  * Renderiza la lista de reproducción principal.
  * @param {Array} songs Lista de canciones a mostrar.
@@ -228,8 +265,16 @@ const createPlaybackIndicator = () => {
  * @param {Function} onSelectSong Callback al pulsar una canción.
  * @param {Function} onToggleFavorite Callback al pulsar el corazón.
  * @param {Function} isFavoriteFn Función que indica si una canción es favorita.
+ * @param {Function} onReorder Callback para reordenar dos canciones.
  */
-export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorite, isFavoriteFn) => {
+export const renderPlaylist = (
+    songs,
+    activeIndex,
+    onSelectSong,
+    onToggleFavorite,
+    isFavoriteFn,
+    onReorder
+) => {
     if (!elements.musicList) return;
     elements.musicList.innerHTML = "";
 
@@ -249,6 +294,8 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
         const originalIndex = song.originalIndex !== undefined ? song.originalIndex : songs.indexOf(song);
         const li = document.createElement("li");
         li.dataset.songIndex = originalIndex;
+        li.dataset.songId = song.id;
+        li.draggable = true;
         li.className = "flex items-center justify-between gap-3 p-1.5 rounded-lg cursor-pointer transition duration-150 group hover:bg-neutral-900";
 
         const leftWrapper = document.createElement("div");
@@ -315,6 +362,7 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
         li.addEventListener("click", () => {
             onSelectSong(originalIndex);
         });
+        addDragHandlers(li, elements.musicList, onReorder);
 
         elements.musicList.appendChild(li);
     });
@@ -328,12 +376,14 @@ export const renderPlaylist = (songs, activeIndex, onSelectSong, onToggleFavorit
  * @param {number} activeIndex Índice de la canción activa.
  * @param {Function} onSelectSong Callback al pulsar una canción.
  * @param {Function} onRemoveFavorite Callback para quitar de favoritas.
+ * @param {Function} onReorder Callback para reordenar dos canciones.
  */
 export const renderFavorites = (
     favoriteSongs,
     activeIndex,
     onSelectSong,
-    onRemoveFavorite
+    onRemoveFavorite,
+    onReorder
 ) => {
     if (!elements.favoritesList) return;
     elements.favoritesList.innerHTML = "";
@@ -358,6 +408,8 @@ export const renderFavorites = (
         const originalIndex = song.originalIndex !== undefined ? song.originalIndex : song.id - 1;
         const li = document.createElement("li");
         li.dataset.songIndex = originalIndex;
+        li.dataset.songId = song.id;
+        li.draggable = true;
         li.className = "flex items-center justify-between gap-2 p-1 rounded-lg cursor-pointer hover:bg-zinc-800/60 transition group";
 
         const leftWrapper = document.createElement("div");
@@ -404,6 +456,7 @@ export const renderFavorites = (
         li.addEventListener("click", () => {
             onSelectSong(originalIndex);
         });
+        addDragHandlers(li, elements.favoritesList, onReorder);
 
         elements.favoritesList.appendChild(li);
     });

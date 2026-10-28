@@ -5,6 +5,7 @@
 
 let songs = [];
 let currentIndex = 0;
+const ORDER_STORAGE_KEY = "music_player_playlist_order";
 
 /**
  * Carga el catálogo de canciones desde el archivo JSON local.
@@ -15,12 +16,40 @@ export const fetchSongs = async () => {
         const response = await fetch("/src/data/music.json");
         if (!response.ok) throw new Error("No se pudo cargar el catálogo musical");
 
-        songs = await response.json();
+        const loadedSongs = await response.json();
+        let storedOrder = [];
+        try {
+            storedOrder = JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY) || "[]");
+        } catch (error) {
+            console.error("Error al leer el orden de reproducción:", error);
+        }
+        const songsById = new Map(loadedSongs.map((song) => [song.id, song]));
+        songs = [
+            ...storedOrder.map((id) => songsById.get(id)).filter(Boolean),
+            ...loadedSongs.filter((song) => !storedOrder.includes(song.id))
+        ];
         return songs;
     } catch (error) {
         console.error("Error al cargar el catálogo de canciones:", error);
         songs = [];
         return [];
+    }
+};
+
+export const reorderSongs = (orderedIds) => {
+    const currentSongId = getCurrentSong()?.id;
+    const songsById = new Map(songs.map((song) => [song.id, song]));
+    const reorderedSongs = [
+        ...orderedIds.map((id) => songsById.get(id)).filter(Boolean),
+        ...songs.filter((song) => !orderedIds.includes(song.id))
+    ];
+
+    songs = reorderedSongs;
+    currentIndex = Math.max(0, songs.findIndex((song) => song.id === currentSongId));
+    try {
+        localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(songs.map((song) => song.id)));
+    } catch (error) {
+        console.error("Error al guardar el orden de reproducción:", error);
     }
 };
 

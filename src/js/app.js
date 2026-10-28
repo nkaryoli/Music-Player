@@ -50,10 +50,11 @@ import {
     setCurrentIndex,
     getNextIndex,
     getPreviousIndex,
-    filterSongs
+    filterSongs,
+    reorderSongs
 } from "./modules/playlist.js";
 
-import { isFavorite, toggleFavorite } from "./modules/favorites.js";
+import { getFavorites, isFavorite, toggleFavorite, reorderFavorites } from "./modules/favorites.js";
 import { initVisualizer, initEqualizerControls } from "./modules/visualizer.js";
 import { initShortcuts } from "./modules/shortcuts.js";
 
@@ -61,9 +62,34 @@ import { initShortcuts } from "./modules/shortcuts.js";
 let isMuted = false;
 let isFavoritesPlayback = false;
 
-const getFavoriteIndexes = () => getAllSongs()
-    .map((song, index) => (isFavorite(song.id) ? index : -1))
-    .filter((index) => index >= 0);
+const getFavoriteIndexes = () => {
+    const favoriteIds = getFavorites();
+    const favoriteIdSet = new Set(favoriteIds);
+    return getAllSongs()
+    .map((song, index) => ({ song, index }))
+    .filter(({ song }) => favoriteIdSet.has(song.id))
+    .sort((a, b) => favoriteIds.indexOf(a.song.id) - favoriteIds.indexOf(b.song.id))
+    .map(({ index }) => index);
+};
+
+const moveIdBefore = (ids, sourceId, targetId) => {
+    const reorderedIds = ids.filter((id) => id !== sourceId);
+    const targetPosition = reorderedIds.indexOf(targetId);
+    if (targetPosition < 0) return ids;
+    reorderedIds.splice(targetPosition, 0, sourceId);
+    return reorderedIds;
+};
+
+const reorderPlaylist = (sourceId, targetId) => {
+    const orderedIds = getAllSongs().map((song) => song.id);
+    reorderSongs(moveIdBefore(orderedIds, sourceId, targetId));
+    refreshViews();
+};
+
+const reorderFavoriteList = (sourceId, targetId) => {
+    reorderFavorites(moveIdBefore(getFavorites(), sourceId, targetId));
+    refreshViews();
+};
 
 const getPlaybackIndex = (direction, isShuffle) => {
     const favoriteIndexes = getFavoriteIndexes();
@@ -150,18 +176,21 @@ const refreshViews = () => {
         getCurrentIndex(),
         (index) => handleSongSelection(index, "playlist"),
         handleToggleFavorite,
-        isFavorite
+        isFavorite,
+        reorderPlaylist
     );
 
     const allSongs = getAllSongs();
-    const favSongs = allSongs
-        .map((s, idx) => ({ ...s, originalIndex: idx }))
-        .filter((s) => isFavorite(s.id));
+    const songsById = new Map(allSongs.map((song, index) => [song.id, { ...song, originalIndex: index }]));
+    const favSongs = getFavorites()
+        .map((id) => songsById.get(id))
+        .filter(Boolean);
     renderFavorites(
         favSongs,
         getCurrentIndex(),
         (index) => handleSongSelection(index, "favorites"),
-        handleToggleFavorite
+        handleToggleFavorite,
+        reorderFavoriteList
     );
     updateActiveSongPlayback(isPlaying());
 };

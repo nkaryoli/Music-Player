@@ -62,3 +62,17 @@ export const toggleFavorite = (songId) => {
     saveFavorites(favorites);
     return isFav;
 };
+
+/**
+ * Guarda el orden personalizado de las canciones favoritas.
+ * @param {number[]} orderedIds IDs en el nuevo orden.
+ */
+export const reorderFavorites = (orderedIds) => {
+    const favoriteIds = getFavorites();
+    const orderedSet = new Set(orderedIds);
+    const reorderedIds = [
+        ...orderedIds.filter((id) => favoriteIds.includes(id)),
+        ...favoriteIds.filter((id) => !orderedSet.has(id))
+    ];
+    saveFavorites(reorderedIds);
+};
